@@ -4,6 +4,7 @@ import com.wangguo.entity.Student;
 import com.wangguo.entity.Swork;
 import com.wangguo.mapper.StudentMapper;
 import com.wangguo.mapper.SworkMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class SworkServiceImpl implements SworkService{
 
     @Autowired
@@ -82,7 +84,19 @@ public class SworkServiceImpl implements SworkService{
     }
 
     public Integer insert(Swork swork){
-        swork.setSid(studentMapper.findByPhone(swork.getSid()).getSid());
-        return sworkMapper.insert(swork);
+        log.info("收到学生作业提交请求: twid={}, phone={}, scontent={}", 
+                 swork.getTwid(), swork.getSid(), swork.getScontent());
+        
+        // 将前端传入的手机号转换为学生ID
+        Student student = studentMapper.findByPhone(swork.getSid());
+        if (student == null) {
+            log.error("未找到学生: {}", swork.getSid());
+            return 0;
+        }
+        swork.setSid(student.getSid());
+        
+        Integer result = sworkMapper.insert(swork);
+        log.info("作业提交结果: {}", result > 0 ? "成功" : "失败");
+        return result;
     }
 }

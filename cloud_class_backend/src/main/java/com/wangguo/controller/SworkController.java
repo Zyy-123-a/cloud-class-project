@@ -56,7 +56,20 @@ public class SworkController {
     @ResponseBody
     public Map<String,Object> updateSContent(@RequestBody JSONObject info){
         Map<String,Object> result = new HashMap<>();
-        result.put("result",sworkService.updateSContent(info.getString("swid"),info.getString("content")));
+        
+        // 参数校验
+        if (!info.has("swid") || info.getString("swid") == null || info.getString("swid").trim().isEmpty()) {
+            result.put("result", 0);
+            result.put("msg", "作业ID不能为空");
+            return result;
+        }
+        if (!info.has("content") || info.getString("content") == null) {
+            result.put("result", 0);
+            result.put("msg", "作业内容不能为空");
+            return result;
+        }
+        
+        result.put("result", sworkService.updateSContent(info.getString("swid"), info.getString("content")));
         return result;
     }
 
