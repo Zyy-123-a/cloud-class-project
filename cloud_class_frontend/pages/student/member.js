@@ -22,36 +22,45 @@ const CourseMember = ({router}) => {
 
     const memberColumns = [
         {
+            title:'头像',
+            dataIndex: 'image',
+            key: 'image',
+            render: (text) => {
+                if (text != null)
+                    return <Avatar src={'data:image/png;base64,'+text} size={22}/>;
+            }
+        },{
             title: '姓名',
             dataIndex: 'tname',
             key: 'tname',
-            width: 150,
         },{
             title: '电话',
             dataIndex: 'tphone',
             key: 'tphone',
-            width: 200,
         },{
             title: '身份',
             dataIndex: 'job',
             key: 'job',
-            width: 200,
         }];
     const studentColumns = [{
+        dataIndex: 'image',
+        key: 'image',
+        render: (text) => {
+            if (text != null)
+                return <Avatar src={'data:image/png;base64,'+text} size={22}/>;
+        }
+    },{
         title: '姓名',
         dataIndex: 'sname',
         key: 'sname',
-        width: 150,
     },{
         title: '学号',
         dataIndex: 'snum',
         key: 'snum',
-        width: 200,
     },{
         title: '邮箱',
         dataIndex: 'semail',
         key: 'semail',
-        width: 200,
     }];
 
     useEffect(() => {
