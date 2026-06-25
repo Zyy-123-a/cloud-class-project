@@ -53,4 +53,9 @@ public class TeachCourseServiceImpl implements TeachCourseService {
     public List<Map> selectArchiveCourse(String tid) {
         return teachCourseMapper.selectArchiveCourse(tid);
     }
+
+    @Override
+    public Integer updateSort(String tcid, Integer tsort) {
+        return teachCourseMapper.updateSort(tcid, tsort);
+    }
 }

@@ -22,4 +22,5 @@ public interface TeachCourseService {
 
     public List<Map> selectArchiveCourse(String tid);
 
+    public Integer updateSort(String tcid, Integer tsort);
 }

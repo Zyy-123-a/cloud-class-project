@@ -32,4 +32,6 @@ public interface TeachCourseMapper {
     Integer updateArchive(String tcid, Integer archive);
 
     List<Map> selectArchiveCourse(String tid);
+
+    Integer updateSort(String tcid, Integer tsort);
 }

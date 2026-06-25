@@ -94,4 +94,21 @@ public class TeachCourseController {
 
         return teachCourseService.insert(tc)>=1?"success":"failed";
     }
+
+    @PostMapping("/updateSort")
+    @ResponseBody
+    public String updateSort(@RequestBody JSONObject info, HttpServletRequest request) {
+        List<Map<String, Object>> sortList = (List<Map<String, Object>>) info.get("sortList");
+        if (sortList == null) {
+            return "failed";
+        }
+        int flag = 0;
+        for (Map<String, Object> item : sortList) {
+            flag += teachCourseService.updateSort(
+                (String) item.get("tcid"),
+                (Integer) item.get("tsort")
+            );
+        }
+        return flag >= sortList.size() ? "success" : "failed";
+    }
 }

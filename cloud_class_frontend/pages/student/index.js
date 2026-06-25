@@ -7,6 +7,7 @@ import {PageContext, CoursesContext} from "../../components/student/Context";
 import "../../public/style/student/course.css";
 import ArchiveCourse from "../../components/student/index/archiveCourse";
 import CourseAddSpan from "../../components/student/index/courseAddSpan";
+import SortCourseModal from "../../components/teacher/index/sortCourseModal";
 import {RealAxios} from "../../components/config";
 import CourseModule from "../../components/student/index/courseModule";
 import CourseAddModule from "../../components/student/index/courseAddModule";
@@ -22,7 +23,23 @@ const reducer = (state, action) => {
 
 const StudentIndex = () => {
     const [coursesInfo, dispatch] = useReducer(reducer, []);
-    const [teacherId, setTeacherId] = useState('');
+    const [sortModalVisible, setSortModalVisible] = useState(false);
+
+    const handleSortSave = async (sortedList) => {
+        // 1. 先更新前端状态，页面立即反映新顺序
+        dispatch({ type: "update", coursesInfo: sortedList });
+
+        // 2. 持久化到后端
+        const sortData = sortedList.map((item, index) => ({
+            scid: item.scid,
+            sort: index
+        }));
+        await RealAxios({
+            method: 'post',
+            url: '/sc/updateSort',
+            data: { sortList: sortData }
+        });
+    };
 
     useEffect(() => {
         if (cookie.load("identify") != "student" || !cookie.load("id")) {
@@ -56,7 +73,7 @@ const StudentIndex = () => {
                             </Col>
                             <Row justify='start' gutter={[10, 0]} align='middle'>
                                 <Col>
-                                    <a>课程排序</a>
+                                    <a onClick={() => setSortModalVisible(true)}>课程排序</a>
                                 </Col>
                                 <Col>
                                     <CoursesContext.Provider value={{coursesInfo, dispatch}}>
@@ -74,8 +91,8 @@ const StudentIndex = () => {
                         </Row>
 
                         <Row gutter={[21, 30]} justify='start'>
-                            {coursesInfo.map((item, key) => (
-                                <Col key={key}>
+                            {coursesInfo.map((item) => (
+                                <Col key={item.scid || item.cid}>
                                     <CoursesContext.Provider value={{item, coursesInfo, dispatch}}>
                                         <CourseModule/>
                                     </CoursesContext.Provider>
@@ -89,6 +106,12 @@ const StudentIndex = () => {
                     </div>
                 </Col>
             </Row>
+            <SortCourseModal
+                visible={sortModalVisible}
+                onClose={() => setSortModalVisible(false)}
+                courses={coursesInfo}
+                onSave={handleSortSave}
+            />
         </Col>
     );
 };

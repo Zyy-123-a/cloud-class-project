@@ -26,4 +26,7 @@
     <select id="selectArchiveCourse" parameterType="java.lang.String" resultType="java.util.HashMap">
         select sc.scid as scid, sc.sid as sid, course.cname as cname, course.cid as cid from sc left join course on course.cid=sc.cid where sc.sid=#{sid} and sc.sarchive=1 and sc.cid in (select cid from course where archive=0)
     </select>
+    <update id="updateSort">
+        update sc set sort=#{sort} where scid=#{scid}
+    </update>
 </mapper>

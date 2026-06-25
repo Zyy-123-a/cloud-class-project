@@ -30,4 +30,5 @@ public interface StudyCourseMapper {
 
     List<Map> selectArchiveCourse(String sid);
 
+    Integer updateSort(String scid, Integer sort);
 }

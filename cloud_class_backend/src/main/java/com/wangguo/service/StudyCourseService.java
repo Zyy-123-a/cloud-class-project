@@ -21,4 +21,6 @@ public interface StudyCourseService {
     public Integer deleteCourse(String scId);
 
     public List<Map> selectArchiveCourse(String sid);
+
+    public Integer updateSort(String scid, Integer sort);
 }

@@ -81,4 +81,21 @@ public class StudyController {
 
         return studyCourseService.insert(sc)>=1?"success":"failed";
     }
+
+    @PostMapping("/updateSort")
+    @ResponseBody
+    public String updateSort(@RequestBody JSONObject info, HttpServletRequest request) {
+        List<Map<String, Object>> sortList = (List<Map<String, Object>>) info.get("sortList");
+        if (sortList == null) {
+            return "failed";
+        }
+        int flag = 0;
+        for (Map<String, Object> item : sortList) {
+            flag += studyCourseService.updateSort(
+                (String) item.get("scid"),
+                (Integer) item.get("sort")
+            );
+        }
+        return flag >= sortList.size() ? "success" : "failed";
+    }
 }

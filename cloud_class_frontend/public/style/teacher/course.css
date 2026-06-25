@@ -62,3 +62,31 @@
     padding-left: 16px;
     padding-right: 5px;
 }
+/* 课程排序弹窗样式 */
+.sort-course-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    background: #fafafa;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    cursor: grab;
+    transition: background 0.2s, opacity 0.2s, box-shadow 0.2s;
+    user-select: none;
+}
+.sort-course-item:hover {
+    background: #f5f5f5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.sort-course-item.dragging {
+    opacity: 0.4;
+    background: #f0f0f0;
+}
+.control-bar a {
+    cursor: pointer;
+    color: rgba(50,186,240,1);
+}
+.control-bar a:hover {
+    color: rgba(30,150,210,1);
+}

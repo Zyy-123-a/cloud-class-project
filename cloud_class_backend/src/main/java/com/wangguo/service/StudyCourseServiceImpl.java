@@ -65,4 +65,9 @@ public class StudyCourseServiceImpl implements StudyCourseService {
     public List<Map> selectArchiveCourse(String sid) {
         return studyCourseMapper.selectArchiveCourse(sid);
     }
+
+    @Override
+    public Integer updateSort(String scid, Integer sort) {
+        return studyCourseMapper.updateSort(scid, sort);
+    }
 }
