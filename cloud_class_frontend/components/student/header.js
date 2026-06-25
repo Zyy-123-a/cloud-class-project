@@ -34,6 +34,9 @@ const Header = () => {
                                 <Menu.Item key='discussion'>
                                     <Link href='/student'><a>讨论区</a></Link>
                                 </Menu.Item>
+                                <Menu.Item key='homework'>
+                                    <Link href='/student/homework-list'><a>作业</a></Link>
+                                </Menu.Item>
                             </Menu>
                         </Col>
                         <Col span={2} offset={8} style={{height: '100%', paddingTop: "5px"}}>
