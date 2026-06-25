@@ -1,20 +1,11 @@
 import axios from "axios";
 
-// export const URL = "http://baiyou1024.top:8080/cloud_class-0.0.1-SNAPSHOT";
+// 后端服务地址
 export const URL = "http://localhost:8080";
 
+// 创建 axios 实例，直接使用完整的后端地址
 export const RealAxios = axios.create({
-    baseURL:URL,
-    proxy: {
-        '/teacher/*': {
-            target: URL,//对应后端端口
-            secure: false,
-            changeOrigin: true
-        },
-        '/student/*': {
-            target: URL,//对应后端端口
-            secure: false,
-            changeOrigin: true
-        },
-    }
+    baseURL: URL,
+    timeout: 10000,
+    withCredentials: true
 });
