@@ -14,6 +14,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -85,16 +87,32 @@ public class CourseServiceImpl implements CourseService{
             else {
                 memberList.get(i).replace("job","老师/助教");
             }
-            if (memberList.get(i).get("image") == null) {
-                memberList.get(i).put("image","error.png");
+            // 安全处理头像：文件不存在时 image 设为 null，前端会跳过渲染
+            try {
+                Object imgObj = memberList.get(i).get("image");
+                if (imgObj == null) {
+                    memberList.get(i).put("image", null);
+                } else {
+                    String name = imgObj.toString();
+                    String url = DefaultInfo.TEACHER_IMG + "\\" + name;
+                    File imgFile = new File(url);
+                    if (imgFile.exists()) {
+                        BufferedImage image = ImageIO.read(imgFile);
+                        if (image != null) {
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            ImageIO.write(image, "png", bos);
+                            String imgString = Base64Utils.encodeToString(bos.toByteArray());
+                            memberList.get(i).replace("image", imgString);
+                        } else {
+                            memberList.get(i).put("image", null);
+                        }
+                    } else {
+                        memberList.get(i).put("image", null);
+                    }
+                }
+            } catch (Exception e) {
+                memberList.get(i).put("image", null);
             }
-            String name = memberList.get(i).get("image").toString();
-            String url = DefaultInfo.TEACHER_IMG+"\\"+name;
-            BufferedImage image = ImageIO.read(new File(url));
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(image,"png",bos);
-            String imgString = Base64Utils.encodeToString(bos.toByteArray());
-            memberList.get(i).replace("image",imgString);
         }
         return memberList;
     }
@@ -103,14 +121,32 @@ public class CourseServiceImpl implements CourseService{
     public List<Map> getCourseStudent(String cid) throws IOException {
         List<Map> studentList = courseMapper.selectCourseSelect(cid);
         for (int i = 0; i < studentList.size(); i++) {
-            studentList.get(i).putIfAbsent("image", "error.png");
-            String name = studentList.get(i).get("image").toString();
-            String url = DefaultInfo.STUDENT_IMG+"\\"+name;
-            BufferedImage image = ImageIO.read(new File(url));
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(image,"png",bos);
-            String imgString = Base64Utils.encodeToString(bos.toByteArray());
-            studentList.get(i).replace("image",imgString);
+            // 安全处理头像：文件不存在时 image 设为 null，前端会跳过渲染
+            try {
+                Object imgObj = studentList.get(i).get("image");
+                if (imgObj == null) {
+                    studentList.get(i).put("image", null);
+                } else {
+                    String name = imgObj.toString();
+                    String url = DefaultInfo.STUDENT_IMG + "\\" + name;
+                    File imgFile = new File(url);
+                    if (imgFile.exists()) {
+                        BufferedImage image = ImageIO.read(imgFile);
+                        if (image != null) {
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            ImageIO.write(image, "png", bos);
+                            String imgString = Base64Utils.encodeToString(bos.toByteArray());
+                            studentList.get(i).replace("image", imgString);
+                        } else {
+                            studentList.get(i).put("image", null);
+                        }
+                    } else {
+                        studentList.get(i).put("image", null);
+                    }
+                }
+            } catch (Exception e) {
+                studentList.get(i).put("image", null);
+            }
         }
         return studentList;
     }
