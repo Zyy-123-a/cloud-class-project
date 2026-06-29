@@ -94,8 +94,7 @@ public class CourseServiceImpl implements CourseService{
                     memberList.get(i).put("image", null);
                 } else {
                     String name = imgObj.toString();
-                    String url = DefaultInfo.TEACHER_IMG + "\\" + name;
-                    File imgFile = new File(url);
+                    File imgFile = new File(DefaultInfo.TEACHER_IMG, name);
                     if (imgFile.exists()) {
                         BufferedImage image = ImageIO.read(imgFile);
                         if (image != null) {
@@ -128,8 +127,7 @@ public class CourseServiceImpl implements CourseService{
                     studentList.get(i).put("image", null);
                 } else {
                     String name = imgObj.toString();
-                    String url = DefaultInfo.STUDENT_IMG + "\\" + name;
-                    File imgFile = new File(url);
+                    File imgFile = new File(DefaultInfo.STUDENT_IMG, name);
                     if (imgFile.exists()) {
                         BufferedImage image = ImageIO.read(imgFile);
                         if (image != null) {
