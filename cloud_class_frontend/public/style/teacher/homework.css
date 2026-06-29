@@ -1,0 +1,52 @@
+.hw-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+}
+
+.hw-card {
+    padding: 24px;
+    border: 1px solid #E2E6ED;
+    border-radius: 8px;
+    background: #FFF;
+    margin-bottom: 16px;
+}
+
+.hw-stats {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 16px;
+}
+
+.hw-stat-item {
+    text-align: center;
+}
+
+.hw-stat-num {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1890ff;
+}
+
+.hw-markdown {
+    line-height: 1.8;
+}
+
+.hw-markdown pre {
+    background: #f6f8fa;
+    padding: 12px;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.hw-back-link {
+    margin-bottom: 16px;
+    cursor: pointer;
+    color: #1890ff;
+}
+
+.hw-grade-panel {
+    background: #fafafa;
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
