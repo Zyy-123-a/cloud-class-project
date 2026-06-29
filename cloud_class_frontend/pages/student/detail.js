@@ -8,8 +8,9 @@ import {WorkContext} from "../../components/student/detail/detailContext";
 import {PageContext} from "../../components/student/Context";
 import HomeWork from "../../components/student/detail/homework";
 import "../../public/style/student/detail.css";
-import {MessageContext} from "../../components/student/detail/detailContext";
+import {MessageContext, ResourceContext} from "../../components/student/detail/detailContext";
 import Message from "../../components/student/detail/message";
+import Resource from "../../components/student/detail/resource";
 import {RealAxios} from "../../components/config";
 
 const Detail = ({router}) => {
@@ -138,6 +139,7 @@ const Detail = ({router}) => {
                         switch (key) {
                             case "work":loadWorks();break;
                             case "message":loadMessage();break;
+                            case "resource": break;
                             default:loadWorks();loadMessage();break;
                         }
                     }}>
@@ -167,6 +169,11 @@ const Detail = ({router}) => {
                                     })
                                 }
                             </Timeline>
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab="资料" key="resource">
+                            <ResourceContext.Provider value={{cid: router.query.id}}>
+                                <Resource />
+                            </ResourceContext.Provider>
                         </Tabs.TabPane>
                     </Tabs>
                 </Row>

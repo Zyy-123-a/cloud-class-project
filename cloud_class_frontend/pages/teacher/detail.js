@@ -4,12 +4,13 @@ import cookie from "react-cookies";
 import Router from "next/router";
 import Header from "../../components/teacher/header";
 import {Button, Col, Collapse, List, message, Row, Select, Tabs, Tag, Typography,Timeline} from "antd";
-import {WorkContext, AnswerContext, MessageContext} from "../../components/teacher/detail/detailContext";
+import {WorkContext, AnswerContext, MessageContext, ResourceContext} from "../../components/teacher/detail/detailContext";
 import {PageContext} from "../../components/teacher/Context";
 import HomeWork from "../../components/teacher/detail/homework";
 import "../../public/style/teacher/detail.css";
 import Correction from "../../components/teacher/detail/correction";
 import Message from "../../components/teacher/detail/message";
+import Resource from "../../components/teacher/detail/resource";
 import {RealAxios} from "../../components/config";
 
 const Detail = ({router}) => {
@@ -262,6 +263,7 @@ const Detail = ({router}) => {
                             case "work":loadWorks();break
                             case "manage": loadNameList();break;
                             case "message": loadMessage();break;
+                            case "resource": break;
                             default:loadWorks();loadNameList();loadMessage();break;
                         }
                     }}>
@@ -361,6 +363,11 @@ const Detail = ({router}) => {
                                     })
                                 }
                             </Timeline>
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab="资料" key="resource">
+                            <ResourceContext.Provider value={{cid: router.query.id}}>
+                                <Resource />
+                            </ResourceContext.Provider>
                         </Tabs.TabPane>
                     </Tabs>
                 </Row>
