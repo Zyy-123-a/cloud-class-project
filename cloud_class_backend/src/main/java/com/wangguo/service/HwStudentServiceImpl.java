@@ -99,6 +99,8 @@ public class HwStudentServiceImpl implements HwStudentService {
             updateParams.put("swid", existing.get("swid").toString());
             updateParams.put("scontent", scontent);
             updateParams.put("spublish", today);
+            // 重新提交时重置批改状态为未批改
+            updateParams.put("correct", "0");
             hwStudentMapper.updateSubmission(updateParams);
             result.put("swid", existing.get("swid").toString());
         }
@@ -125,19 +127,44 @@ public class HwStudentServiceImpl implements HwStudentService {
         Student student = studentMapper.findByPhone(sphone);
         String sid = student.getSid();
         String originalName = file.getOriginalFilename();
-        String ext = originalName.substring(originalName.lastIndexOf("."));
-        String storedName = new Date().getTime() + ext;
+        // 磁盘文件名：时间戳_原始文件名，保证唯一且可读
+        String storedName = new Date().getTime() + "_" + originalName;
         File dir = new File(HomeworkFilePath.HOMEWORK_DIR);
         if (!dir.exists()) {
-            dir.mkdirs();
+            boolean created = dir.mkdirs();
+            if (!created) {
+                System.err.println("无法创建目录: " + dir.getAbsolutePath());
+                result.put("result", 0);
+                result.put("msg", "文件保存失败：无法创建目录 " + dir.getAbsolutePath());
+                return result;
+            }
         }
         File target = new File(dir, storedName);
+        System.out.println("保存文件到: " + target.getAbsolutePath());
         try {
             file.transferTo(target);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.err.println("文件保存失败: " + e.getMessage());
+            e.printStackTrace();
             result.put("result", 0);
-            result.put("msg", "文件保存失败");
+            result.put("msg", "文件保存失败: " + e.getMessage());
             return result;
+        }
+
+        // 检查是否已上传过同名文件，避免重复
+        Map<String, Object> checkParams = new HashMap<>();
+        checkParams.put("twid", twid);
+        checkParams.put("sid", sid);
+        checkParams.put("type", "1");
+        List<Map<String, Object>> existingFiles = hwAttachmentMapper.findByTwidAndSid(checkParams);
+        for (Map<String, Object> existing : existingFiles) {
+            String existName = existing.get("filename") != null ? existing.get("filename").toString() : "";
+            if (existName.endsWith("_" + originalName)) {
+                result.put("result", 1);
+                result.put("aid", existing.get("aid"));
+                result.put("filename", existName);
+                return result;
+            }
         }
 
         Attachment attachment = new Attachment();

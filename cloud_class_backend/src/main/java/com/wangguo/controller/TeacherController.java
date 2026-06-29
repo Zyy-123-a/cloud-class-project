@@ -211,13 +211,20 @@ public class TeacherController {
         if (name== null){
             name = "error.png";
         }
-        String url = DefaultInfo.TEACHER_IMG+"\\"+name;
-        log.info(info.getString("phone")+":"+url);
-        BufferedImage image = ImageIO.read(new File(url));
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ImageIO.write(image,"png",bos);
-        String imgString = Base64Utils.encodeToString(bos.toByteArray());
-        result.put("image",imgString);
+        File imgFile = new File(DefaultInfo.TEACHER_IMG, name);
+        log.info(info.getString("phone")+":"+imgFile.getPath());
+        if (imgFile.exists()) {
+            BufferedImage image = ImageIO.read(imgFile);
+            if (image != null) {
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ImageIO.write(image, "png", bos);
+                String imgString = Base64Utils.encodeToString(bos.toByteArray());
+                result.put("image", imgString);
+            }
+        }
+        if (!result.containsKey("image")) {
+            result.put("image", "");
+        }
         result.put("type","png");
         return result;
     }

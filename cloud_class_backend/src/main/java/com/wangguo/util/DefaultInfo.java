@@ -8,8 +8,9 @@ import java.util.HashMap;
  * @date 2020/6/2
  */
 public class DefaultInfo {
-    public static final String TEACHER_IMG = "E:\\computer2\\file\\header\\teacher";
-    public static final String STUDENT_IMG = "E:\\computer2\\file\\header\\student";
+    private static final String BASE = System.getProperty("user.dir") + java.io.File.separator + "upload" + java.io.File.separator + "header";
+    public static final String TEACHER_IMG = BASE + java.io.File.separator + "teacher";
+    public static final String STUDENT_IMG = BASE + java.io.File.separator + "student";
 
     public static HashMap<String, Object> convertToMap(Object obj)
             throws Exception {
