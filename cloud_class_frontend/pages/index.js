@@ -24,57 +24,39 @@ export default function IndexHome() {
         <>
             <Head>
                 <title>课堂派 - 智能教学平台</title>
+                <link
+                    rel="stylesheet"
+                    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+                />
                 <script src="https://cdn.tailwindcss.com"></script>
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `
-              tailwind.config = {
-                theme: {
-                  extend: {
-                    colors: {
-                      primary: '#165DFF',
-                      secondary: '#FF7D00',
-                      accent: '#36BFFA',
-                      neutral: {
-                        50: '#F9FAFB',
-                        100: '#F5F7FA',
-                        200: '#E5E6EB',
-                        300: '#C9CDD4',
-                        400: '#86909C',
-                        500: '#4E5969',
-                        600: '#272E3B',
-                        700: '#1D2129',
-                      }
-                    },
-                    fontFamily: {
-                      inter: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                  },
-                }
-              }
-            `,
-                    }}
-                />
-                <style
-                    type="text/tailwindcss"
-                    dangerouslySetInnerHTML={{
-                        __html: `
-              @layer utilities {
-                .content-auto { content-visibility: auto; }
-                .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-                .transition-custom { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-                .card-hover { transition: all 0.3s ease; }
-                .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
-                .gradient-text { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(to right, #165DFF, #36BFFA); }
-                .bg-glass { backdrop-filter: blur(8px); background-color: rgba(255, 255, 255, 0.8); }
-                .feature-icon { @apply w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary text-2xl; }
-                .btn-primary { @apply px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom font-medium shadow-lg shadow-primary/20; }
-                .btn-outline { @apply px-6 py-3 bg-white text-primary border border-primary/20 rounded-lg hover:bg-primary/5 transition-custom font-medium; }
-              }
-            `,
-                    }}
-                />
+                <script>
+                    {`
+      // 等页面加载完再配置，避免重复声明
+      window.addEventListener('load', function() {
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: '#165DFF',
+                secondary: '#FF7D00',
+                accent: '#36BFFA',
+                neutral: {
+                  50: '#F9FAFB',
+                  100: '#F5F7FA',
+                  200: '#E5E6EB',
+                  300: '#C9CDD4',
+                  400: '#86909C',
+                  500: '#4E5969',
+                  600: '#272E3B',
+                  700: '#1D2129',
+                },
+              },
+            },
+          },
+        }
+      })
+    `}
+                </script>
             </Head>
 
             <body className="font-inter bg-neutral-50 text-neutral-700 overflow-x-hidden">
