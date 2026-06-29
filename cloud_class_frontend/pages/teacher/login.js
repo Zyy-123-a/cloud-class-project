@@ -104,7 +104,7 @@ const Login = ()=>{
             <Col span={6}>
                 <div className='wrap'>
                     <Row gutter={[16, 0]}>
-                        <Col onClick={()=>{Router.push('/')}} style={{
+                        <Col onClick={()=>{Router.push('/login')}} style={{
                             display:'flex',justifyContent:'center'
                         }}><BackSvg/>选择身份</Col>
                     </Row>
