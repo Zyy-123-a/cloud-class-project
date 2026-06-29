@@ -148,6 +148,35 @@ add column sarchive int ;
 alter table course
 modify column cdate varchar(15);
 
+create table resource (
+rid             varchar(15) not null unique,
+cid             varchar(15) not null,
+tid             varchar(15) not null,
+rname           varchar(500) not null,
+rcategory       varchar(50) not null default '其他',
+rfilename       varchar(255),
+roriginalname   varchar(255),
+rsize           bigint not null default 0,
+rdate           varchar(20) not null,
+rlink           varchar(500),
+rtype           varchar(10) not null default 'file',
+fid             varchar(15),
+rsort           int not null default 0,
+constraint r_pk primary key(rid),
+constraint cr_fk foreign key(cid) references course(cid),
+constraint tr_fk foreign key(tid) references teacher(tid)
+);
+
+create table resource_folder (
+fid             varchar(15) not null unique,
+cid             varchar(15) not null,
+fname           varchar(100) not null,
+parent_fid      varchar(15),
+fsort           int not null default 0,
+constraint f_pk primary key(fid),
+constraint f_cid_fk foreign key(cid) references course(cid)
+);
+
 
 
 

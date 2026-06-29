@@ -1,0 +1,54 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangguo.mapper.ResourceMapper">
+    <select id="getResourceList" parameterType="map" resultType="map">
+        select rid, cid, tid, rname, rfilename, roriginalname, rsize, rdate, rlink, rtype, fid
+        from resource
+        where cid = #{cid}
+        <if test="rtype != null and rtype != ''">
+            and rtype = #{rtype}
+        </if>
+        <if test="fid != null and fid != ''">
+            and fid = #{fid}
+        </if>
+        <if test="fid == null or fid == ''">
+            and fid is null
+        </if>
+        order by rsort asc, rdate desc
+    </select>
+
+    <insert id="insertResource" parameterType="map">
+        insert into resource (rid, cid, tid, rname, rfilename, roriginalname, rsize, rdate, rlink, rtype, fid)
+        values (#{rid}, #{cid}, #{tid}, #{rname}, #{rfilename}, #{roriginalname}, #{rsize}, #{rdate}, #{rlink}, #{rtype}, #{fid})
+    </insert>
+
+    <delete id="deleteResource" parameterType="java.lang.String">
+        delete from resource where rid = #{rid}
+    </delete>
+
+    <delete id="deleteByFid" parameterType="java.lang.String">
+        delete from resource where fid = #{fid}
+    </delete>
+
+    <select id="getResourceById" parameterType="java.lang.String" resultType="map">
+        select rid, cid, tid, rname, rfilename, roriginalname, rsize, rdate, rlink, rtype, fid
+        from resource where rid = #{rid}
+    </select>
+
+    <select id="getTidByCid" parameterType="java.lang.String" resultType="java.lang.String">
+        select tid from course where cid = #{cid}
+    </select>
+
+    <update id="moveResource" parameterType="map">
+        update resource set fid = #{fid} where rid = #{rid}
+    </update>
+
+    <update id="renameResource" parameterType="map">
+        update resource set rname = #{rname}, roriginalname = #{rname} where rid = #{rid}
+    </update>
+
+    <update id="sortResource" parameterType="map">
+        update resource set rsort = #{rsort} where rid = #{rid}
+    </update>
+</mapper>
