@@ -22,16 +22,14 @@
     "/_polyfills": [
       "static/runtime/polyfills.js"
     ],
-    "/teacher": [
+    "/student/detail": [
       "static/runtime/webpack.js",
       "static/css/styles.chunk.css",
       "static/chunks/styles.js",
       "static/runtime/main.js"
     ],
-    "/teacher/login": [
+    "/student/login": [
       "static/runtime/webpack.js",
-      "static/css/styles.chunk.css",
-      "static/chunks/styles.js",
       "static/runtime/main.js"
     ]
   }

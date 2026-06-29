@@ -8,13 +8,6 @@ import { getStatusTag, renderMarkdown, downloadAttachment } from './utils';
 
 const { TextArea } = Input;
 
-// 去掉时间戳前缀，显示原始文件名
-const displayName = (name) => {
-    if (!name) return '';
-    const idx = name.indexOf('_');
-    return idx > -1 ? name.substring(idx + 1) : name;
-};
-
 const HomeworkDetailPanel = ({ twid, cid }) => {
     const [detail, setDetail] = useState(null);
     const [content, setContent] = useState('');
@@ -150,7 +143,7 @@ const HomeworkDetailPanel = ({ twid, cid }) => {
                                             <a key="dl" onClick={() => downloadAttachment(RealAxios, item.aid, item.filename)}>下载</a>,
                                         ]}
                                     >
-                                        {displayName(item.filename)}
+                                        {item.filename}
                                     </List.Item>
                                 )}
                             />
@@ -195,7 +188,7 @@ const HomeworkDetailPanel = ({ twid, cid }) => {
                                         <List.Item actions={[
                                             <a key="del" onClick={() => handleDeleteFile(item.aid)}>删除</a>,
                                         ]}>
-                                            {displayName(item.filename)}
+                                            {item.filename}
                                         </List.Item>
                                     )}
                                 />
