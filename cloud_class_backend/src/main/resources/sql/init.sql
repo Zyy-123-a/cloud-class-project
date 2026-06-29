@@ -177,6 +177,20 @@ constraint f_pk primary key(fid),
 constraint f_cid_fk foreign key(cid) references course(cid)
 );
 
+-- 备课区
+create table preparation (
+    pid varchar(15) not null unique,
+    tid varchar(15) not null,
+    cid varchar(15),
+    pname varchar(100) not null,
+    pcontent text,
+    filename varchar(255),
+    original_name varchar(255),
+    ppublish date not null,
+    constraint prep_pk primary key(pid),
+    constraint prep_tid_fk foreign key(tid) references teacher(tid)
+);
+
 
 
 

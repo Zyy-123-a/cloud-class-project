@@ -10,6 +10,8 @@ import HomeWork from "../../components/teacher/detail/homework";
 import "../../public/style/teacher/detail.css";
 import Correction from "../../components/teacher/detail/correction";
 import Message from "../../components/teacher/detail/message";
+import PreparationPanel from "../../components/teacher/detail/PreparationPanel";
+import ImportModal from "../../components/teacher/detail/ImportModal";
 import Resource from "../../components/teacher/detail/resource";
 import {RealAxios} from "../../components/config";
 
@@ -36,6 +38,7 @@ const Detail = ({router}) => {
     const [wName, setWName] = useState([{twid:"1",wtitle:"第一次"}, {twid:"2",wtitle:"第二次"}])
 
     const [answerConfig, setAnswerConfig] = useState({twid:"1",kind:"0"});
+    const [importVisible, setImportVisible] = useState(false);
     //加载作业信息
     const loadWorks = ()=>{
         RealAxios({
@@ -271,6 +274,8 @@ const Detail = ({router}) => {
                             <Button type='primary' onClick={() => {
                                 publish();
                             }} style={{margin: "0 5px 10px 0"}}>发布作业</Button>
+                            <Button onClick={() => setImportVisible(true)}
+                                    style={{margin: "0 5px 10px 0"}}>导入作业</Button>
                             <List
                                 itemLayout='horizontal'
                                 dataSource={works}
@@ -369,7 +374,18 @@ const Detail = ({router}) => {
                                 <Resource />
                             </ResourceContext.Provider>
                         </Tabs.TabPane>
+                        <Tabs.TabPane tab="备课区" key="preparation">
+                            <PreparationPanel cid={router.query.id} />
+                        </Tabs.TabPane>
                     </Tabs>
+                    <ImportModal
+                        visible={importVisible}
+                        onClose={() => setImportVisible(false)}
+                        cid={router.query.id}
+                        onSuccess={() => {
+                            loadWorks();
+                        }}
+                    />
                 </Row>
             </Col>
         </div>
