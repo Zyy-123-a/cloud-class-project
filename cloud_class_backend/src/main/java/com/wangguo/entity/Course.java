@@ -17,4 +17,5 @@ public class Course {
     private Integer cnum;
     private String invite;
     private Integer archive;
+    private Integer disableStudentTalk;
 }

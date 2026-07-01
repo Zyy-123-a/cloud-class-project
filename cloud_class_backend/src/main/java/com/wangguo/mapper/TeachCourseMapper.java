@@ -27,7 +27,8 @@ public interface TeachCourseMapper {
 
     TeachCourse findByCondition(String cid, String tid);
 
-    Map<String, Long> sizeByTid(String tid);
+    // 修复：返回类型改为 Integer，直接返回数量
+    Integer sizeByTid(String tid);
 
     Integer updateArchive(String tcid, Integer archive);
 

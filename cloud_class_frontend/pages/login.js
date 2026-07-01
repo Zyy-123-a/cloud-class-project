@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button, Row, Col } from 'antd'
-import '../public/style/index.css'
 import Router from 'next/router'
 
 const Home = () => {
@@ -25,7 +24,6 @@ const Home = () => {
                         textAlign: 'center'
                     }}
                 >
-                    {/* 标题区域 */}
                     <h1 style={{
                         fontSize: '48px',
                         fontWeight: 600,
@@ -33,7 +31,6 @@ const Home = () => {
                         margin: '0 0 80px 0'
                     }}>选择身份</h1>
 
-                    {/* 学生按钮 */}
                     <Button
                         type="primary"
                         size="large"
@@ -47,11 +44,9 @@ const Home = () => {
                             border: 'none',
                             borderRadius: '16px',
                             marginBottom: '40px',
-                            // 清除多余蓝色凸起核心样式
                             boxShadow: 'none',
                             overflow: 'hidden'
                         }}
-                        // 清除点击active底部蓝色块
                         onMouseDown={(e) => e.target.style.background = '#0f4cd8'}
                         onMouseUp={(e) => e.target.style.background = '#165DFF'}
                         onMouseLeave={(e) => e.target.style.background = '#165DFF'}
@@ -59,7 +54,6 @@ const Home = () => {
                         我是学生
                     </Button>
 
-                    {/* 教师按钮 */}
                     <Button
                         type="primary"
                         size="large"

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +82,7 @@ public class CourseController {
         }
         course.setCnum(0);
         course.setArchive(0);
+        course.setDisableStudentTalk(0); // 默认允许发言
 
         Integer flag = courseService.insert(course);
         if (flag >= 1) {
@@ -100,27 +102,62 @@ public class CourseController {
             }
             teachCourseService.insert(tc);
         }
-        result .put("msg", flag>=1?"success":"failed");
+        result.put("msg", flag>=1?"success":"failed");
         result.put("cid", cid);
 
         return result;
     }
 
-
+    // ========== 修复：getCourseByTeacher - 增加空指针保护 ==========
     @PostMapping("/getCourseByTeacher")
     @ResponseBody
     public List<Map> getTeacherCourse(@RequestBody JSONObject info) throws Exception {
-        Teacher teacher = teacherService.getInfo(info.getString("phone"));
-        return courseService.getCourseByTeacher(teacher.getTid());
+        try {
+            // 安全获取 phone 参数
+            String phone = info.optString("phone");
+            if (phone == null || phone.isEmpty()) {
+                log.warn("getCourseByTeacher: phone 参数为空");
+                return new ArrayList<>();
+            }
+
+            Teacher teacher = teacherService.getInfo(phone);
+            if (teacher == null) {
+                log.warn("getCourseByTeacher: 未找到教师, phone={}", phone);
+                return new ArrayList<>();
+            }
+
+            return courseService.getCourseByTeacher(teacher.getTid());
+        } catch (Exception e) {
+            log.error("getCourseByTeacher 异常: {}", e.getMessage(), e);
+            return new ArrayList<>();
+        }
     }
+    // ========== 修复结束 ==========
 
-
+    // ========== 修复：getCourseByStudent - 增加空指针保护 ==========
     @PostMapping("/getCourseByStudent")
     @ResponseBody
     public List<Map> getStudentCourse(@RequestBody JSONObject info) throws Exception {
-        Student student = studentService.getInfo(info.getString("phone"));
-        return courseService.getCourseByStudent(student.getSid());
+        try {
+            String phone = info.optString("phone");
+            if (phone == null || phone.isEmpty()) {
+                log.warn("getStudentCourse: phone 参数为空");
+                return new ArrayList<>();
+            }
+
+            Student student = studentService.getInfo(phone);
+            if (student == null) {
+                log.warn("getStudentCourse: 未找到学生, phone={}", phone);
+                return new ArrayList<>();
+            }
+
+            return courseService.getCourseByStudent(student.getSid());
+        } catch (Exception e) {
+            log.error("getStudentCourse 异常: {}", e.getMessage(), e);
+            return new ArrayList<>();
+        }
     }
+    // ========== 修复结束 ==========
 
     @PostMapping("getCourseMember")
     @ResponseBody
@@ -163,6 +200,23 @@ public class CourseController {
         Integer integer = courseService.updateNameById(info.getString("id"),info.getString("name"));
         result.put("result",integer);
         return result;
+    }
+
+    // 获取课程讨论状态
+    @PostMapping("/getTalkStatus")
+    @ResponseBody
+    public Map<String, Object> getTalkStatus(@RequestBody JSONObject info) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String cid = info.getString("cid");
+            Course course = courseService.findById(cid);
+            Integer disable = course != null ? course.getDisableStudentTalk() : 0;
+            map.put("disableStudentTalk", disable == null ? 0 : disable);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("disableStudentTalk", 0);
+        }
+        return map;
     }
 
 }

@@ -38,15 +38,17 @@ public class TeachCourseServiceImpl implements TeachCourseService {
 
     @Override
     public Integer sizeByTid(String tid) {
-        if (teachCourseMapper.sizeByTid(tid) == null)
+        try {
+            Integer count = teachCourseMapper.sizeByTid(tid);
+            return count != null ? count : 0;
+        } catch (Exception e) {
             return 0;
-        Number value = (Number)teachCourseMapper.sizeByTid(tid).get("countCourse");
-        return value.intValue();
+        }
     }
 
     @Override
     public Integer archiveCourse(String tcid, Integer archive) {
-        return teachCourseMapper.updateArchive(tcid,archive);
+        return teachCourseMapper.updateArchive(tcid, archive);
     }
 
     @Override

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangguo.mapper.ReplyMapper">
+    <insert id="insert" parameterType="Reply">
+        INSERT INTO reply(tid,uid,role,content,is_anonym,create_time,update_time,user_name)
+        VALUES(#{tid},#{uid},#{role},#{content},#{isAnonym},#{createTime},#{updateTime},#{userName})
+    </insert>
+    <select id="selectByTid" resultType="Reply">
+        SELECT * FROM reply WHERE tid = #{tid} ORDER BY create_time ASC
+    </select>
+</mapper>

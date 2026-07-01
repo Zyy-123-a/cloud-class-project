@@ -9,8 +9,7 @@ import {PageContext} from "./Context";
 const Header = () => {
     const page = useContext(PageContext);
     const [top, setTop] = useState(0);
-    useEffect(() => {
-    }, []);
+    useEffect(() => {}, []);
     return (
         <Affix offsetTop={top}>
             <Head>
@@ -19,20 +18,20 @@ const Header = () => {
             </Head>
             <div id='header-wrap'>
                 <Col span={18} offset={3} style={{height: "50px"}}>
-                    <Row type='flex' align='bottom' id='' style={{height: '50px'}}>
+                    <Row type='flex' align='bottom' style={{height: '50px'}}>
                         <Col span={4}>
                             <div id='logo-text'>CloudClass</div>
                         </Col>
                         <Col span={10}>
                             <Menu
                                 mode="horizontal"
-                                defaultSelectedKeys={page}
+                                defaultSelectedKeys={[page]}
                             >
                                 <Menu.Item key='index'>
                                     <Link href='/student'><a>首页</a></Link>
                                 </Menu.Item>
-                                <Menu.Item key='discussion'>
-                                    <Link href='/student'><a>讨论区</a></Link>
+                                <Menu.Item key='topic'>
+                                    <Link href="/student/topic"><a>讨论区</a></Link>
                                 </Menu.Item>
                                 <Menu.Item key='homework'>
                                     <Link href='/student/homework-list'><a>作业</a></Link>

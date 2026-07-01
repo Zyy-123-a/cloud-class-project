@@ -1,8 +1,8 @@
 package com.wangguo.mapper;
 
-
 import com.wangguo.entity.Course;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -22,47 +22,25 @@ public interface CourseMapper {
 
     Integer coursePeopleAdd(String cid);
 
-    Integer updateCourse(String cid, String cname, String cdate);
+    Integer updateCourse(@Param("cid") String cid, @Param("cname") String cname, @Param("cdate") String cdate);
 
-    Integer deleteCourse(String cid);
+    Integer deleteCourse(@Param("cid") String cid);
 
-    Integer archiveCourse(String cid, Integer archive);
+    Integer archiveCourse(@Param("cid") String cid, @Param("archive") Integer archive);
 
-    /**
-     * @author 郭伟
-     * @date 2020/6/9
-     * @param course
-     * @return
-     */
     Integer insert(Course course);
 
-    Course findByInvite(String courseCode);
+    Course findByInvite(@Param("courseCode") String courseCode);
 
-    List<Map> getCourseByStudent(String sid);
+    List<Map> getCourseByStudent(@Param("sid") String sid);
 
-    /**
-     * @author 郭伟
-     * @date 2020/6/7
-     * @return
-     */
-    List<Map> getCourseByTeacher(String tid);
+    List<Map> getCourseByTeacher(@Param("tid") String tid);
 
-
-
-    /**
-     * @author 王游
-     * @action 通过id查找课程
-     * @param id
-     * @return
-     */
-    Course findById(String id);
-
-    /**
-     * @author 王游
-     * @action 通过id查找并修改名称
-     * @param info
-     * @return
-     */
     Integer updateNameById(HashMap info);
 
+    // 更新禁止学生讨论状态
+    Integer updateTalkStatus(@Param("cid") String cid, @Param("disable") Integer disable);
+
+    // 根据cid查询课程
+    Course findById(@Param("cid") String cid);
 }

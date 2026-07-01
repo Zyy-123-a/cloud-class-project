@@ -30,20 +30,33 @@ const Login = ()=>{
     const [security, setSecurity] = useState('');
     const [image,setImage] = useState('');
     const [code, setCode] = useState('');
+
     const changeCode = ()=>{
         setSecurity("");
-        RealAxios.get("student/getSecurityCode?time="+new Date().getTime())
+        // 修复：添加 / 前缀
+        RealAxios.get("/student/getSecurityCode?time="+new Date().getTime())
             .then((response)=>{
                 setImage('data:image/png;base64,'+response.data.image);
                 setCode(response.data.code);
             })
+            .catch((error)=>{
+                console.error("获取验证码失败:", error);
+                message.warning("获取验证码失败，请点击重试");
+            });
     };
+
     useEffect(()=>{
         changeCode();
     },[]);
+
     const login = ()=>{
+        if (!sPhone || !sPassword) {
+            message.warning("请输入手机号和密码");
+            return;
+        }
         if (security.toLowerCase() != code.toString().toLowerCase()){
             message.error("验证码错误");
+            changeCode();
             return;
         }
         RealAxios({
@@ -64,18 +77,24 @@ const Login = ()=>{
                 setAction("sign");
                 changeCode();
             }else if (response.data.msg == 'ok'){
-                cookie.save("identify","student",{path:"/"})
-                cookie.save("id",sPhone,{path:"/"})
+                // 保存登录信息
+                cookie.save("identify","student",{path:"/"});
+                cookie.save("sid", sPhone, {path:"/"});
+                cookie.save("id", sPhone, {path:"/"});
+                message.success("登录成功");
                 Router.push("/student");
             }
         }).catch((error)=>{
             console.log(error);
+            message.error("登录失败，请重试");
             changeCode();
         })
     };
+
     const signUp = ()=>{
         if (security.toLowerCase() != code.toString().toLowerCase()){
-            message.error("error");
+            message.error("验证码错误");
+            changeCode();
             return;
         }
         RealAxios({
@@ -104,9 +123,11 @@ const Login = ()=>{
                 changeCode();
             }
         }).catch((error)=>{
-            console.log(error)
+            console.log(error);
+            message.error("注册失败，请重试");
         })
     };
+
     return (
         <Row id="login" justify='center' align='middle' style={{paddingTop: 50 + "px"}}>
             <Head>
@@ -117,7 +138,7 @@ const Login = ()=>{
                 <div className='wrap'>
                     <Row gutter={[16, 0]}>
                         <Col onClick={()=>{Router.push('/login')}} style={{
-                            display:'flex',justifyContent:'center'
+                            display:'flex',justifyContent:'center', cursor:'pointer'
                         }}><BackSvg/>选择身份</Col>
                     </Row>
                     <Row>
@@ -139,8 +160,8 @@ const Login = ()=>{
                                     <Col span={11}>
                                         <Input type='text' size='large' placeholder='验证码' prefix={<SecurityCodeSvg/>} value={security} onChange={(e)=>{setSecurity(e.target.value)}}/>
                                     </Col>
-                                    <Col span={11}>
-                                        <img src={image} onClick={changeCode}/>
+                                    <Col span={11} style={{display:'flex', alignItems:'center', justifyContent:'center'}}>
+                                        <img src={image} onClick={changeCode} style={{cursor:'pointer', height:40, width:'100%', objectFit:'contain'}} alt="验证码"/>
                                     </Col>
                                 </Row>
                                 <Row style={{margin:"10px"}}>
@@ -174,8 +195,8 @@ const Login = ()=>{
                                     <Col span={11}>
                                         <Input type='text' size='large' placeholder='验证码' prefix={<SecurityCodeSvg/>} value={security} onChange={(e)=>{setSecurity(e.target.value)}}/>
                                     </Col>
-                                    <Col span={11}>
-                                        <img src={image} onClick={changeCode}/>
+                                    <Col span={11} style={{display:'flex', alignItems:'center', justifyContent:'center'}}>
+                                        <img src={image} onClick={changeCode} style={{cursor:'pointer', height:40, width:'100%', objectFit:'contain'}} alt="验证码"/>
                                     </Col>
                                 </Row>
                                 <Row style={{margin:"10px"}}>

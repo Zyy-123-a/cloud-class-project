@@ -152,7 +152,10 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public List<Map> getCourseGrade(String cid) {
         List<Map> courseGrade = courseMapper.selectCourseGrade(cid);
-        System.out.println("name: " + courseGrade.get(0).get("sname").toString());
+        // 判空，防止空列表下标越界报错
+        if (courseGrade != null && !courseGrade.isEmpty()) {
+            System.out.println("name: " + courseGrade.get(0).get("sname").toString());
+        }
         return courseGrade;
     }
 
@@ -182,4 +185,19 @@ public class CourseServiceImpl implements CourseService{
         info.put("name",name);
         return courseMapper.updateNameById(info);
     }
+
+    // ==================== 新增方法 ====================
+
+    /**
+     * 更新课程的禁止学生发言状态
+     * @param cid 课程ID
+     * @param disable 0-允许发言, 1-禁止发言
+     * @return 影响行数
+     */
+    @Override
+    public Integer updateTalkStatus(String cid, Integer disable) {
+        return courseMapper.updateTalkStatus(cid, disable);
+    }
+
+    // ==================== 新增方法结束 ====================
 }

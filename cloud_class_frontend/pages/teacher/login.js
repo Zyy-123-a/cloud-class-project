@@ -9,6 +9,18 @@ import Head from "next/head";
 
 const {TabPane} = Tabs;
 const {Password} = Input;
+
+// 清除所有 Cookie 的工具函数
+const clearAllCookies = () => {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    }
+};
+
 const Login = ()=>{
     const [action,setAction] = useState('login');
     const [tPhone, setTPhone] = useState('');
@@ -19,6 +31,7 @@ const Login = ()=>{
     const [security, setSecurity] = useState('');
     const [image,setImage] = useState('');
     const [code, setCode] = useState('');
+
     const changeCode = ()=>{
         setSecurity("");
         RealAxios.get("teacher/getSecurityCode?time="+new Date().getTime())
@@ -27,9 +40,13 @@ const Login = ()=>{
                 setCode(response.data.code);
             })
     };
+
     useEffect(()=>{
+        // 页面加载时清除旧的 Cookie，避免身份混乱
+        clearAllCookies();
         changeCode();
     },[]);
+
     const login = ()=>{
         if (security.toLowerCase() != code.toString().toLowerCase()){
             message.error("验证码错误");
@@ -53,8 +70,12 @@ const Login = ()=>{
                 setAction("sign");
                 changeCode();
             }else if (response.data.msg == 'ok'){
+                // 登录成功设置 Cookie
                 cookie.save("identify","teacher",{path:"/"})
                 cookie.save("id",tPhone,{path:"/"})
+                cookie.save("tid",tPhone,{path:"/"})  // 添加 tid
+                cookie.save("phone",tPhone,{path:"/"}) // 添加 phone
+                message.success("登录成功");
                 Router.push("/teacher");
             }
         }).catch((error)=>{
@@ -62,6 +83,7 @@ const Login = ()=>{
             changeCode();
         })
     };
+
     const signUp = ()=>{
         if (security.toLowerCase() != code.toString().toLowerCase()){
             message.error("验证码错误");
@@ -95,17 +117,18 @@ const Login = ()=>{
             console.log(error)
         })
     };
+
     return (
         <Row id='login' justify='center' align='middle' style={{paddingTop: 50 + "px"}}>
             <Head>
-                <title>云课堂</title>
+                <title>云课堂 - 教师登录</title>
                 <meta charSet='utf-8' />
             </Head>
             <Col span={6}>
                 <div className='wrap'>
                     <Row gutter={[16, 0]}>
                         <Col onClick={()=>{Router.push('/login')}} style={{
-                            display:'flex',justifyContent:'center'
+                            display:'flex',justifyContent:'center',cursor:'pointer'
                         }}><BackSvg/>选择身份</Col>
                     </Row>
                     <Row>
@@ -118,21 +141,21 @@ const Login = ()=>{
                                 </div>
                             }>
                                 <Row style={{margin:"10px"}}>
-                                <Input size="large" type='text' placeholder='手机号' prefix={<UserSvg />} value={tPhone} onChange={(e)=>{setTPhone(e.target.value)}}/>
+                                    <Input size="large" type='text' placeholder='手机号' prefix={<UserSvg />} value={tPhone} onChange={(e)=>{setTPhone(e.target.value)}}/>
                                 </Row>
                                 <Row style={{margin:"10px"}}>
-                                <Password size='large' placeholder='密码' prefix={<PasswordSvg/>} value={tPassword} onChange={(e)=>{setTPassword(e.target.value)}}/>
+                                    <Password size='large' placeholder='密码' prefix={<PasswordSvg/>} value={tPassword} onChange={(e)=>{setTPassword(e.target.value)}}/>
                                 </Row>
                                 <Row style={{margin:"10px"}} justify='space-between'>
                                     <Col span={11}>
                                         <Input type='text' size='large' placeholder='验证码' prefix={<SecurityCodeSvg/>} value={security} onChange={(e)=>{setSecurity(e.target.value)}}/>
                                     </Col>
                                     <Col span={11}>
-                                        <img src={image} onClick={changeCode}/>
+                                        <img src={image} onClick={changeCode} style={{cursor:'pointer',height:'40px'}}/>
                                     </Col>
                                 </Row>
                                 <Row style={{margin:"10px"}}>
-                                <Button size='large' type='primary' style={{width:'100%'}} onClick={login}>登录</Button>
+                                    <Button size='large' type='primary' style={{width:'100%'}} onClick={login}>登录</Button>
                                 </Row>
                             </TabPane>
                             <TabPane tab={
@@ -160,7 +183,7 @@ const Login = ()=>{
                                         <Input type='text' size='large' placeholder='验证码' prefix={<SecurityCodeSvg/>} value={security} onChange={(e)=>{setSecurity(e.target.value)}}/>
                                     </Col>
                                     <Col span={11}>
-                                        <img src={image} onClick={changeCode}/>
+                                        <img src={image} onClick={changeCode} style={{cursor:'pointer',height:'40px'}}/>
                                     </Col>
                                 </Row>
                                 <Row style={{margin:"10px"}}>

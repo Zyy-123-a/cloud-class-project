@@ -34,68 +34,86 @@ public class StudyController {
     @PostMapping("/findArchiveCourse")
     @ResponseBody
     public List<Map> findArchiveCourse(@RequestBody JSONObject info, HttpServletRequest request) {
-        return studyCourseService.selectArchiveCourse(studentService.getInfo(info.getString("phone")).getSid());
+        String phone = info.getString("phone");
+        String sid = studentService.getInfo(phone).getSid();
+        return studyCourseService.selectArchiveCourse(sid);
     }
 
     @PostMapping("/deleteCourse")
     @ResponseBody
     public String deleteCourse(@RequestBody JSONObject info, HttpServletRequest request) {
-        return studyCourseService.deleteCourse(info.getString("scid"))>=1?"success":"failed";
+        String scid = info.getString("scid");
+        return studyCourseService.deleteCourse(scid) >= 1 ? "success" : "failed";
     }
 
     @PostMapping("/archiveCourse")
     @ResponseBody
     public String archiveCourse(@RequestBody JSONObject info, HttpServletRequest request) {
-        return studyCourseService.archiveCourse(info.getString("scid"), info.getInt("archive"))>=1?"success":"failed";
+        String scid = info.getString("scid");
+        Integer archive = info.getInt("archive");
+        return studyCourseService.archiveCourse(scid, archive) >= 1 ? "success" : "failed";
     }
 
     @PostMapping("/getCourse")
     @ResponseBody
     public List<Map> getCourseByStudent(@RequestBody JSONObject info, HttpServletRequest request) {
-        String sid = studentService.getInfo(info.getString("phone")).getSid();
+        String phone = info.getString("phone");
+        String sid = studentService.getInfo(phone).getSid();
         return studyCourseService.getCourseByStudent(sid);
     }
 
     @PostMapping("/addStudyCourse")
     @ResponseBody
     public String addStudyCourse(@RequestBody JSONObject scInfo) {
-        if (courseService.getCourseByInvite(scInfo.getString("invite")) == null)
+        String inviteCode = scInfo.getString("invite");
+        String sid = scInfo.getString("sid");
+        // 根据邀请码查询课程
+        com.wangguo.entity.Course targetCourse = courseService.getCourseByInvite(inviteCode);
+        if (targetCourse == null) {
             return "not_exist_error";
-        if (courseService.getCourseByInvite(scInfo.getString("invite")).getArchive() != 0)
+        }
+        // 课程已归档，禁止加入
+        if (targetCourse.getArchive() != 0) {
             return "illegal_error";
-        if (studyCourseService.getInfoByCidAndSid(courseService.getCourseByInvite(scInfo.getString("invite")).getCid(),scInfo.getString("sid")) != null)
+        }
+        // 学生已加入该课程
+        String cid = targetCourse.getCid();
+        if (studyCourseService.getInfoByCidAndSid(cid, sid) != null) {
             return "existed_error";
+        }
+
         StudyCourse sc = new StudyCourse();
-        sc.setCid(courseService.getCourseByInvite(scInfo.getString("invite")).getCid());
-        sc.setSid(scInfo.getString("sid"));
+        sc.setCid(cid);
+        sc.setSid(sid);
         sc.setGrade("-1");
-        sc.setSort(studyCourseService.sizeBySid(scInfo.getString("sid")) + 1);
+        sc.setSort(studyCourseService.sizeBySid(sid) + 1);
         sc.setSarchive(0);
-        while(true) {
-            String scId = CourseCode.getRandomNum(15);
+
+        // 生成唯一scid
+        String scId;
+        while (true) {
+            scId = CourseCode.getRandomNum(15);
             if (studyCourseService.getInfoById(scId) == null) {
                 sc.setScid(scId);
                 break;
             }
         }
-
-        return studyCourseService.insert(sc)>=1?"success":"failed";
+        return studyCourseService.insert(sc) >= 1 ? "success" : "failed";
     }
 
     @PostMapping("/updateSort")
     @ResponseBody
     public String updateSort(@RequestBody JSONObject info, HttpServletRequest request) {
         List<Map<String, Object>> sortList = (List<Map<String, Object>>) info.get("sortList");
-        if (sortList == null) {
+        if (sortList == null || sortList.isEmpty()) {
             return "failed";
         }
-        int flag = 0;
+        int successCount = 0;
         for (Map<String, Object> item : sortList) {
-            flag += studyCourseService.updateSort(
-                (String) item.get("scid"),
-                (Integer) item.get("sort")
-            );
+            String scid = (String) item.get("scid");
+            Integer sort = (Integer) item.get("sort");
+            successCount += studyCourseService.updateSort(scid, sort);
         }
-        return flag >= sortList.size() ? "success" : "failed";
+        return successCount >= sortList.size() ? "success" : "failed";
     }
 }

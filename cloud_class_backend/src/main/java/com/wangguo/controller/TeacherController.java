@@ -45,9 +45,9 @@ public class TeacherController {
      */
     @PostMapping("/uploadImg")
     @ResponseBody
-    public String FileUpdate (HttpServletRequest request,@RequestParam("avatar") MultipartFile file) {
-
-        String phone =request.getParameter("phone");
+    public Map<String, String> FileUpdate (HttpServletRequest request,@RequestParam("avatar") MultipartFile file) {
+        Map<String, String> result = new HashMap<>();
+        String phone = request.getParameter("phone");
         //表示获得服务器的绝对路径
         String str=DefaultInfo.TEACHER_IMG;
         //得到上传时的文件名字
@@ -69,13 +69,16 @@ public class TeacherController {
             Teacher teacher = teacherService.getInfo(phone);
             teacher.setTimage(newName);
             teacherService.update(teacher);
+            result.put("code", "200");
+            result.put("message", "success");
+            result.put("path", str + "\\" + newName);
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
+            result.put("code", "500");
+            result.put("message", e.getMessage());
         }
         log.info("phone:"+phone+"newName:"+newName);
-        return str+"\\"+newName;
-
-
+        return result;
     }
 
     /**

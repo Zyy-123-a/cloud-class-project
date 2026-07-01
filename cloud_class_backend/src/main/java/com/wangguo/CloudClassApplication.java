@@ -1,5 +1,6 @@
 package com.wangguo;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @SpringBootApplication
+// 新增：扫描mapper接口，MyBatis-Plus必须配置，否则所有Mapper注入失败
+@MapperScan("com.wangguo.mapper")
 public class CloudClassApplication {
     private CorsConfiguration buildConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
