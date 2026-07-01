@@ -1,0 +1,42 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangguo.mapper.ResourceFolderMapper">
+    <select id="getFolderList" parameterType="java.lang.String" resultType="map">
+        select fid, cid, fname, parent_fid as parentFid, fsort
+        from resource_folder
+        where cid = #{cid}
+        order by fsort asc, fid asc
+    </select>
+
+    <insert id="insertFolder" parameterType="map">
+        insert into resource_folder (fid, cid, fname, parent_fid, fsort)
+        values (#{fid}, #{cid}, #{fname}, #{parent_fid}, #{fsort})
+    </insert>
+
+    <update id="updateFolder" parameterType="map">
+        update resource_folder set fname = #{fname} where fid = #{fid}
+    </update>
+
+    <delete id="deleteFolder" parameterType="java.lang.String">
+        delete from resource_folder where fid = #{fid}
+    </delete>
+
+    <update id="moveFolder" parameterType="map">
+        update resource_folder set parent_fid = #{parent_fid} where fid = #{fid}
+    </update>
+
+    <update id="updateSort" parameterType="map">
+        update resource_folder set fsort = #{fsort} where fid = #{fid}
+    </update>
+
+    <select id="getChildFolders" parameterType="java.lang.String" resultType="map">
+        select fid, cid, fname, parent_fid as parentFid, fsort
+        from resource_folder
+        where parent_fid = #{fid}
+    </select>
+
+    <update id="updateChildrenParent" parameterType="map">
+        update resource_folder set parent_fid = #{new_parent} where parent_fid = #{old_parent}
+    </update>
+</mapper>

@@ -9,11 +9,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Attachment {
-    private String aid;
-    private String twid;
-    private String tsid;
-    private String tid;
-    private String filename;
-    private String type;
+public class ResourceFolder {
+    private String fid;
+    private String cid;
+    private String fname;
+    private String parentFid;
+    private Integer fsort;
 }

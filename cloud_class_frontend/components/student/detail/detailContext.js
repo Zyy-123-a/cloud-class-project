@@ -6,3 +6,6 @@ export const WorkContext = createContext({swid:"1",twid:"1",tid:"1",cid:"1",wtit
 
 //消息
 export const MessageContext = createContext({mid:"1",cid:"1",mtitle:"1",mcontent:"1",mpublish:"2020/09/08"});
+
+//资料
+export const ResourceContext = createContext({cid:"1"});

@@ -11,6 +11,7 @@ public class DefaultInfo {
     private static final String BASE = System.getProperty("user.dir") + java.io.File.separator + "upload" + java.io.File.separator + "header";
     public static final String TEACHER_IMG = BASE + java.io.File.separator + "teacher";
     public static final String STUDENT_IMG = BASE + java.io.File.separator + "student";
+    public static final String RESOURCE_FILE = System.getProperty("user.dir") + java.io.File.separator + "upload" + java.io.File.separator + "resource";
 
     public static HashMap<String, Object> convertToMap(Object obj)
             throws Exception {
